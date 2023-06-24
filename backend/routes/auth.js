@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const fetchuser = require('../middleware/fetchuser')
 const User = require('../models/User')
 // For Validation
 const { body, validationResult } = require('express-validator');
@@ -12,7 +13,7 @@ const JWT_SECRET = "sajidisgoodboy"
 
 
 
-// Create a User using: POST endpoint:"/api/auth/createuser". No login require
+// ROUTE 1: Create a User using: POST endpoint:"/api/auth/createuser". No login require
 router.post('/createuser', [
     body('name', 'Enter a valid name').isLength({ min: 3 }),
     body('email', 'Enter a valid email').isEmail(),
@@ -65,7 +66,7 @@ router.post('/createuser', [
 
 })
 
-// Authenticate a User using: POST endpoint:"/api/auth/login". No login require
+//ROUTE 2 : Authenticate a User using: POST endpoint:"/api/auth/login". No login require
 
 router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
@@ -78,6 +79,7 @@ router.post('/login', [
         return res.status(400).json({ error: error.array() })
     }
 
+    // check email and password inset correctly if not than error occured 
     const { email, password } = req.body;
     try {
         let user = await User.findOne({ email });
@@ -90,13 +92,16 @@ router.post('/login', [
             return res.status(400).json({ error: 'Please try to login with correct credentials' })
 
         }
-
+        // send token and that taken have user id 
         const data = {
             user: {
                 id: user.id
             }
         }
+
+        //jwt auth sign
         const authToken = jwt.sign(data, JWT_SECRET)
+        // send response --auth token not user
         res.json({ authToken })
     } catch (error) {
         console.error(error.message)
@@ -105,5 +110,18 @@ router.post('/login', [
 
 })
 
+//ROUTE 3 : Get loggedin User Deatils using: POST endpoint:"/api/auth/getuser". Login required
+
+router.post('/getuser', fetchuser, async (req, res) => {
+    try {
+        userId = req.user.id
+        const user = await User.findById(userId).select("-password")
+        res.send(user)
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send("Internal Server Occured")
+    }
+
+})
 
 module.exports = router
