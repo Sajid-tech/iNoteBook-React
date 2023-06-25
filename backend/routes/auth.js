@@ -92,6 +92,7 @@ router.post('/login', [
             return res.status(400).json({ error: 'Please try to login with correct credentials' })
 
         }
+        // If the password comparison is successful, the code generates a JSON Web Token (JWT) containing the user's ID. The token is signed using a secret key (JWT_SECRET) to ensure its authenticity. The token is then sent back to the client in the response body as a JSON object containing the "authToken" property.
         // send token and that taken have user id 
         const data = {
             user: {
