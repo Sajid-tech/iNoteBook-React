@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
+const Login = (props) => {
     const [credentials, setCredentials] = useState({ email: '', password: '' })
 
     let navigate = useNavigate()
@@ -21,11 +21,13 @@ const Login = () => {
         if (json.success) {
             //save the auth token and redirect
             localStorage.setItem('token', json.authtoken)
+
+            props.showAlert("Logged in Successfully", "success")
             navigate('/home')
 
         }
         else {
-            alert('invalid credentials')
+            props.showAlert("Invalid Details", "danger")
         }
     }
     const onChange = (e) => {
@@ -33,22 +35,35 @@ const Login = () => {
     }
     return (
         <div>
-            <form onSubmit={handleSumbit}>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email address</label>
-                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name='email' aria-describedby="emailHelp" />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} id="password" name='password' />
-                </div>
-                <div className="mb-3 form-check">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" className="btn btn-primary" >Submit</button>
-            </form>
+
+            <div className="text-center mt-5 mb-4">
+                <h1>iNOTEBOOK</h1>
+                <p>Your notes on cloud ☁️ </p>
+            </div>
+
+            <p className='text-center'>Login to continue using iNotebook 😊</p>
+            <div className="container form ">
+                <form onSubmit={handleSumbit}>
+
+                    <div className=" mb-4  ">
+                        <label htmlFor="email" className="form-label">Email address</label>
+                        <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name='email' aria-describedby="emailHelp" />
+
+                    </div>
+                    <div className="mb-4 ">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input type="password" className="form-control" value={credentials.password} onChange={onChange} id="password" name='password' />
+                    </div>
+
+
+                    <div className="text-center">
+                        <button type="submit" className="btn btn-primary" >Login</button>
+                    </div>
+                </form>
+            </div>
+
+
+
         </div>
     )
 }
