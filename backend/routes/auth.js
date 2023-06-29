@@ -72,6 +72,7 @@ router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password cannot be blank').exists(),
 ], async (req, res) => {
+    let success = false
 
     // If there are errors , return Bad request and the errors
     const error = validationResult((req))
@@ -84,12 +85,15 @@ router.post('/login', [
     try {
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ error: 'Please try to login with correct credentials' })
+            success = false
+            return res.status(400).json({ success, error: 'Please try to login with correct credentials' })
         }
 
         const passwordCompare = await bcrypt.compare(password, user.password);
         if (!passwordCompare) {
-            return res.status(400).json({ error: 'Please try to login with correct credentials' })
+            success = false
+            return res.status(400).json({ success, error: 'Please try to login with correct credentials' })
+
 
         }
         // If the password comparison is successful, the code generates a JSON Web Token (JWT) containing the user's ID. The token is signed using a secret key (JWT_SECRET) to ensure its authenticity. The token is then sent back to the client in the response body as a JSON object containing the "authToken" property.
@@ -103,7 +107,8 @@ router.post('/login', [
         //jwt auth sign
         const authToken = jwt.sign(data, JWT_SECRET)
         // send response --auth token not user
-        res.json({ authToken })
+        success = true;
+        res.json({ success, authToken })
     } catch (error) {
         console.error(error.message)
         res.status(500).send("Internal Server Occured")
@@ -115,7 +120,7 @@ router.post('/login', [
 
 router.post('/getuser', fetchuser, async (req, res) => {
     try {
-        userId = req.user.id
+        const userId = req.user.id
         const user = await User.findById(userId).select("-password")
         res.send(user)
     } catch (error) {
