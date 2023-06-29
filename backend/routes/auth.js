@@ -19,10 +19,11 @@ router.post('/createuser', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password must be at least 5 characters').isLength({ min: 5 }),
 ], async (req, res) => {
+    let success = false
     // If there are errors , return Bad request and the errors
     const error = validationResult((req))
     if (!error.isEmpty()) {
-        return res.status(400).json({ error: error.array() })
+        return res.status(400).json({ success, error: error.array() })
     }
 
     try {
@@ -30,7 +31,7 @@ router.post('/createuser', [
         let user = await User.findOne({ email: req.body.email })
 
         if (user) {
-            return res.status(400).json({ error: "Sorry a user with this email already exits" })
+            return res.status(400).json({ success, error: "Sorry a user with this email already exits" })
         }
         //password hashing
         const salt = await bcrypt.genSalt(10);
@@ -55,7 +56,8 @@ router.post('/createuser', [
         // send response --auth token not user
 
         // res.json(user)
-        res.json({ authToken })
+        success = true
+        res.json({ success, authToken })
         // catch the error
     } catch (error) {
         console.error(error.message)
