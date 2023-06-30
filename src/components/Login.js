@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Login = (props) => {
     const [credentials, setCredentials] = useState({ email: '', password: '' })
@@ -55,9 +55,13 @@ const Login = (props) => {
                         <input type="password" className="form-control" value={credentials.password} onChange={onChange} id="password" name='password' />
                     </div>
 
+                    <div>
+                        <div className="text-center">
+                            <button type="submit" className="btn btn-primary" >Login</button>
 
-                    <div className="text-center">
-                        <button type="submit" className="btn btn-primary" >Login</button>
+                        </div>
+                        <br />
+                        <p className='text-center last-para'>Don't have an account? <Link to="/signup">SignUp-&gt;</Link> </p>
                     </div>
                 </form>
             </div>

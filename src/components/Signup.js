@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Signup = (props) => {
     const [credentials, setCredentials] = useState({ name: '', email: '', password: '', cpassword: '' })
@@ -60,8 +60,12 @@ const Signup = (props) => {
                         <label htmlFor="cpassword" className="form-label">Confirm Password</label>
                         <input type="password" className="form-control" id="cpassword" name='cpassword' onChange={onChange} minLength={5} required />
                     </div>
-                    <div className="text-center">
-                        <button type="submit" className="btn btn-primary">Sign Up</button>
+                    <div>
+                        <div className="text-center">
+                            <button type="submit" className="btn btn-primary">Sign Up</button>
+                        </div>
+                        <br />
+                        <p className='text-center last-para'>Already have an account? <Link to="/login">Login-&gt;</Link> </p>
                     </div>
                 </form>
             </div>
