@@ -1,9 +1,10 @@
-#for run in local host
-#1.Download the code and open in vs code
+#For run in local host
 
-#2.'npm install' -- for installing node modules\
+1.Download the code and open in vs code
 
-#3.In terminal --> 'npm run both'
+2.'npm install' -- for installing node modules\
+
+3.In terminal --> 'npm run both'
 
 
 # Front-End Part
